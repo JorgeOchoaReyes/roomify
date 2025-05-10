@@ -56,7 +56,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
   const messageParts = processMessageContent(isUser ? message.content : displayedContent);
 
   return (
-    <div className={cn("flex items-start gap-4 rounded-lg p-4", isUser ? "bg-muted/50" : "bg-background")}>
+    <div className={cn("flex items-start gap-4 rounded-lg p-4 ", isUser ? "bg-muted/50" : "bg-background")}>
       <Avatar className={cn("h-8 w-8", !isUser && "bg-primary text-primary-foreground")}>
         {isUser ? <User className="h-full w-full" /> : <Bot className="h-full w-full" />}
       </Avatar>
@@ -65,7 +65,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
           {isUser ? "You" : "AI Assistant"}
           {isTyping && <span className="ml-2 inline-block animate-pulse">...</span>}
         </div>
-        <div className="prose prose-sm dark:prose-invert overflow-scroll sm:max-w-[60vw] 3xl:max-w-[65vw] break-words rounded-md bg-muted/50 p-2 ">
+        <div className="prose prose-sm dark:prose-invert overflow-auto sm:max-w-[60vw] 3xl:max-w-[65vw] break-words rounded-md bg-muted/50 p-2 ">
           {messageParts.map((part, index) => {
             if (part.type === "text") {
               return (

@@ -1,13 +1,12 @@
 import { z } from "zod";  
 import { VertexAI , type Content } from "@google-cloud/vertexai";  
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc"; 
-import type { Chat, Message, User, VertexAiAccount } from "~/types";
+import type { Chat, Message, VertexAiAccount } from "~/types";
 import { v4 as uuid } from "uuid";  
 
-export const chatRouter = createTRPCRouter({
-  chat: protectedProcedure
-    .input(z.object({ 
-      chatId: z.string().optional(),
+export const surveyRouter = createTRPCRouter({
+  survey: protectedProcedure
+    .input(z.object({  
       message: z.string().optional(),
     }))
     .mutation(async ({ input, ctx}) => {  
@@ -24,17 +23,16 @@ export const chatRouter = createTRPCRouter({
       });
       const model = vertex.getGenerativeModel({
         model: "gemini-2.0-flash-001",     
-        systemInstruction: "You are a helpful assitant to help users with their menu management, and labor questions.", 
-      });   
-      const { chatId } = input;
+        systemInstruction: ".", 
+      });    
       const userId = ctx.session.user?.uid;
       if (!userId) {
         throw new Error("User not authenticated");
       }
       let chat: Chat | null = null;
-      const userChats = await ctx.db.collection("users").doc(userId).collection("chats").doc(chatId ?? "").get();
+      const userChats = await ctx.db.collection("users").doc(userId).collection("survey").doc("init").get();
 
-      if(!chatId || !userChats.exists) {
+      if(!userChats.exists) {
         const newChat = uuid();
         chat = {
           id: newChat, 
@@ -46,7 +44,7 @@ export const chatRouter = createTRPCRouter({
           createdAt: new Date().getTime(),
           updatedAt: new Date().getTime(),
         };
-        await ctx.db.collection("users").doc(userId).collection("chats").doc(newChat).set({
+        await ctx.db.collection("users").doc(userId).collection("survey").doc("init").set({
           ...chat,
         }, { merge: true }); 
       } else { 
@@ -85,7 +83,7 @@ export const chatRouter = createTRPCRouter({
         updatedAt: new Date().getTime(),
       };
 
-      await ctx.db.collection("users").doc(userId).collection("chats").doc(chat.id).set({
+      await ctx.db.collection("users").doc(userId).collection("survey").doc("init").set({
         ...updatedChat,
       }, { merge: true });
       
@@ -94,14 +92,13 @@ export const chatRouter = createTRPCRouter({
         messages: [...chat.messages, assistantMessage],
       }; 
     }),
-  getRecentMessages: protectedProcedure
-    .input(z.object({ chatId: z.string() }))
+  getRecentMessages: protectedProcedure 
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user?.uid;
       if (!userId) {
         throw new Error("User not authenticated");
       }
-      const userChats = await ctx.db.collection("users").doc(userId).collection("chats").doc(input.chatId).get();
+      const userChats = await ctx.db.collection("users").doc(userId).collection("survey").doc("init").get();
       if (!userChats.exists) {
         throw new Error("Chat not found");
       }
@@ -109,50 +106,17 @@ export const chatRouter = createTRPCRouter({
       chat.messages = chat.messages.sort((a,b) => parseInt(a.id) - parseInt(b.id)).slice(-5); 
       return chat;  
     }),
-  getMostRecentChat: protectedProcedure
+  getSurvey: protectedProcedure
     .mutation(async ({ ctx }) => {
       const userId = ctx.session.user?.uid;
       if (!userId) {
         throw new Error("User not authenticated");
       }
-      const userChats = await ctx.db.collection("users").doc(userId).collection("chats").orderBy("createdAt", "desc").limit(1).get();
-      if (userChats.empty) {
+      const userChats = await ctx.db.collection("users").doc(userId).collection("survey").doc("init").get();
+      if (userChats.exists) {
         throw new Error("No chats found");
       }
-      const chat = userChats?.docs?.[0]?.data() as Chat;
+      const chat = userChats.data() as Chat;
       return chat; 
-    }),
-  getChats: protectedProcedure
-    .query(async ({ ctx }) => {
-      const userId = ctx.session.user?.uid;
-      if (!userId) {
-        throw new Error("User not authenticated");
-      }
-      const userChats = await ctx.db.collection("users").doc(userId).collection("chats").get();
-      const chats: Pick<Chat, "createdAt" | "id" >[] = [];
-      userChats.forEach((doc) => {
-        const chat = doc.data() as Chat;
-        chats.push({
-          id: chat.id,
-          createdAt: chat.createdAt,
-        });
-      });
-      return chats.sort((a, b) => b.createdAt - a.createdAt);
-    }),
-  createChat: protectedProcedure
-    .input(z.object({  message: z.string().optional() }))
-    .mutation(async ({ ctx }) => {
-      const userId = ctx.session.user?.uid;
-      if (!userId) {
-        throw new Error("User not authenticated");
-      }
-      const newChat = uuid();
-      await ctx.db.collection("users").doc(userId).collection("chats").doc(newChat).set({
-        id: newChat,
-        messages: [],
-        createdAt: new Date().getTime(),
-        updatedAt: new Date().getTime(),
-      }, { merge: true });
-      return newChat;
     }),  
 });
