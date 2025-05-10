@@ -1,17 +1,38 @@
-import type { easeOut } from "framer-motion";
-import { is } from "./../../node_modules/unist-util-is/lib/index.d";
 import type { UserRecord } from "firebase-admin/auth";
 
-export interface User extends UserRecord {
-    squareAppId?: string
-    squareAppSecret?: string
-    squareAccessToken?: string
-    squareRefreshToken?: string
-    squareMerchantId?: string
+export interface User extends UserRecord { 
     subscriptionId?: string
     status?: string
     priceId?: string
     clientReferenceId?: string
+
+    name?: string
+    email?: string 
+
+    onBoarded?: boolean
+    surveyCompleted?: boolean
+
+    lookingFor?: "renting" | "roommate" | "both"
+    zipCode?: string
+    phone?: string
+    locationSeekingZipCode?: string
+    
+    rentingLocations?: Address[]
+
+}
+
+export interface Address {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+}
+
+export interface ApiResult<T> {
+    success: boolean;
+    data?: T;
+    error: boolean;
+    messages: string[];
 }
 
 export interface Chat {
@@ -23,7 +44,7 @@ export interface Chat {
 
 export interface Message {
     id: string;
-    content: string;
+    content: string; 
     role: "user" | "assistant";
     isNew?: boolean;
 }

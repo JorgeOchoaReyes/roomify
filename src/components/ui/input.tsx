@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { cn } from "~/lib/utils";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+function Input({ className, type, formProps={}, ...props }: React.ComponentProps<"input"> & { formProps?: unknown }) {
   return (
     <input
       type={type}
@@ -14,6 +14,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
         className
       )}
       {...props}
+      {...(formProps as object)}
     />
   );
 }
