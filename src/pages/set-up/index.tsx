@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { cn } from "~/lib/utils";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { useRouter } from "next/router"; 
+import { useSetup } from "~/hooks/use-setup";
 
 const setupSchema = z.object({
   zipcode: z.string().regex(/^\d{5}(-\d{4})?$/, "Please enter a valid US zipcode"),
@@ -26,6 +27,7 @@ const setupSchema = z.object({
 type SetupFormValues = z.infer<typeof setupSchema>
 
 export default function SetupPage() {
+  const {has_user_been_onboarded, has_user_completed_survey} = useSetup();
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<Partial<SetupFormValues>>({
@@ -35,8 +37,16 @@ export default function SetupPage() {
     locationSeekingZipCode: "",
   });
   const [isComplete, setIsComplete] = useState(false);
-
   const setupProfile = api.setUp.setupProfile.useMutation();
+
+  useEffect(() => {
+    if (has_user_been_onboarded && has_user_completed_survey) {
+      (async () => await router.push("/dashboard"))();
+    } else if (has_user_been_onboarded && !has_user_completed_survey) {
+      (async () => await router.push("/set-up/chat"))();
+    }
+  }, [has_user_been_onboarded, has_user_completed_survey, router]);
+
 
   const {
     register,

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { type ApiResult } from "~/types"; 
+import { type ApiResult, type User } from "~/types"; 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const setUpRouter = createTRPCRouter({
@@ -72,5 +72,21 @@ export const setUpRouter = createTRPCRouter({
       result.messages.push("User created");
 
       return result;
+    }),
+  userStatus: protectedProcedure
+    .query(async ({ ctx }) => {
+      const userId = ctx.session.user?.uid;
+      if (!userId) {
+        throw new Error("User not authenticated");
+      }
+      const getUser = await ctx.db.collection("users").doc(userId).get();
+      if (!getUser.exists) {
+        throw new Error("User not found");
+      }
+      const user = getUser.data() as User;
+      return {
+        onoBoarded: user.onBoarded,
+        surveryCompleted: user.surveyCompleted,
+      };
     }),
 });
