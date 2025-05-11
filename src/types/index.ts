@@ -18,8 +18,21 @@ export interface User extends UserRecord {
     locationSeekingZipCode?: string
     
     rentingLocations?: Address[]
+    characteristics?: Characteristic;
 
 }
+
+export interface Characteristic { 
+   "Religion": string,   
+   "Gender": string,     
+   "Smoking": string,    
+   "Pets": string,       
+   "Car": string,        
+   "Politics": string,   
+   "Cooking": string,    
+   "Drinking": string,   
+   "Budget": string, 
+};
 
 export interface Address {
     street: string;

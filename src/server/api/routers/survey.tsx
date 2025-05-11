@@ -25,7 +25,6 @@ export const surveyRouter = createTRPCRouter({
         model: "gemini-2.0-flash-001",     
         systemInstruction: `
           You are a helpful assistant that is trying to understand the users needs and preferences in what they are looking for in a roommate.
-          
         `, 
       });    
       const userId = ctx.session.user?.uid;
