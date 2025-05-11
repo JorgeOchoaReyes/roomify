@@ -36,7 +36,8 @@ export default tseslint.config(
       "no-console": "off",
       "indent": ["error", 2],
       "quotes": [2, "double"],
-      "semi": [2, "always"]
+      "semi": [2, "always"],
+      "@typescript-eslint/no-floating-promises": "off",
     },
   },
   {

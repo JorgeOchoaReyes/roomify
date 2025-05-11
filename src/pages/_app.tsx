@@ -9,6 +9,13 @@ import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import { Layout } from "~/components/layout";
 import { useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+
+const pageVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.2 } },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
+};
 
 const geist = Geist({
   subsets: ["latin"],
@@ -47,15 +54,25 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <div className={geist.className}>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      {
-        isDashboardRoute ? ( 
-          <Layout>
-            <Component {...pageProps} />
-          </Layout> 
-        ) : (
-          <Component {...pageProps} />
-        )
-      }
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={router.route}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={pageVariants}
+        >
+          {
+            isDashboardRoute ? ( 
+              <Layout>
+                <Component {...pageProps} />
+              </Layout> 
+            ) : (
+              <Component {...pageProps} />
+            )
+          }
+        </motion.div>
+      </AnimatePresence>
       <Toaster richColors position="bottom-right" />
     </div>
   );

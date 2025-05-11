@@ -4,9 +4,11 @@ import { ChatBlock } from "~/components/chat/no-sidebar-chat";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { useRouter } from "next/router";
+import { useSetup } from "~/hooks/use-setup";
 
 export default function Chat() {
   const router = useRouter();
+  const { has_user_been_onboarded, has_user_completed_survey } = useSetup();
   return (
     <>
       <Head>

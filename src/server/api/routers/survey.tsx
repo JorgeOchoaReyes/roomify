@@ -23,7 +23,10 @@ export const surveyRouter = createTRPCRouter({
       });
       const model = vertex.getGenerativeModel({
         model: "gemini-2.0-flash-001",     
-        systemInstruction: ".", 
+        systemInstruction: `
+          You are a helpful assistant that is trying to understand the users needs and preferences in what they are looking for in a roommate.
+          
+        `, 
       });    
       const userId = ctx.session.user?.uid;
       if (!userId) {
@@ -93,7 +96,7 @@ export const surveyRouter = createTRPCRouter({
       }; 
     }),
   getRecentMessages: protectedProcedure 
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ ctx }) => {
       const userId = ctx.session.user?.uid;
       if (!userId) {
         throw new Error("User not authenticated");

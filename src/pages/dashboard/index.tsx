@@ -1,9 +1,6 @@
-import React from "react";  
-import { api } from "~/utils/api";
+import React from "react";   
 
 export default function Dashboard() {   
-
-  api.chat.searchAnItem.useQuery();
 
   return (
     <>
