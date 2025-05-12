@@ -8,15 +8,12 @@ export interface User extends UserRecord {
 
     name?: string
     email?: string 
-
     onBoarded?: boolean
     surveyCompleted?: boolean
-
     lookingFor?: "renting" | "roommate" | "both"
     zipCode?: string
     phone?: string
     locationSeekingZipCode?: string
-    
     rentingLocations?: Address[]
     characteristics?: Characteristic;
 
@@ -32,6 +29,9 @@ export interface Characteristic {
    "Cooking": string,    
    "Drinking": string,   
    "Budget": string, 
+   "Occupation": string,
+   "Hobbies": string,
+   "COMPLETED": boolean,
 };
 
 export interface Address {

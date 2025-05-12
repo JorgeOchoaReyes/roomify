@@ -53,26 +53,36 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   
   return (
     <div className={geist.className}>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <AnimatePresence mode="wait" initial={true}>
-        <motion.div
-          key={router.route}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          variants={pageVariants}
-        >
-          {
-            isDashboardRoute ? ( 
-              <Layout>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+      {
+        isDashboardRoute ? ( 
+          <Layout>
+            <AnimatePresence mode="wait" initial={true}>
+              <motion.div
+                key={router.route}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                variants={pageVariants}
+              >
                 <Component {...pageProps} />
-              </Layout> 
-            ) : (
+              </motion.div>
+            </AnimatePresence>
+          </Layout> 
+        ) : (
+          <AnimatePresence mode="wait" initial={true}>
+            <motion.div
+              key={router.route}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              variants={pageVariants}
+            >
               <Component {...pageProps} />
-            )
-          }
-        </motion.div>
-      </AnimatePresence>
+            </motion.div>
+          </AnimatePresence>
+        )
+      }
       <Toaster richColors position="bottom-right" />
     </div>
   );

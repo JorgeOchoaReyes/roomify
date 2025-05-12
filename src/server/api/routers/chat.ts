@@ -1,7 +1,7 @@
 import { z } from "zod";  
 import { VertexAI , type Content } from "@google-cloud/vertexai";  
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc"; 
-import type { Chat, Message, User, VertexAiAccount } from "~/types";
+import type { Chat, Message,VertexAiAccount } from "~/types";
 import { v4 as uuid } from "uuid";  
 
 export const chatRouter = createTRPCRouter({
