@@ -8,11 +8,12 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
 import { Alert, AlertDescription } from "../components/ui/alert"; 
-import { EyeIcon, EyeOffIcon, AlertCircle } from "lucide-react";
+import { EyeIcon, EyeOffIcon, AlertCircle, ArrowLeft } from "lucide-react";
 import { SiGoogle } from "react-icons/si";
 import { useSignInWithGoogle, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth"; 
 import { toast } from "sonner";
 import nookies from "nookies";
+import { Arrow } from "@radix-ui/react-tooltip";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -82,6 +83,10 @@ export default function SignIn() {
         <meta name="description" content="Sign in to your account" />
       </Head>
       <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 dark:bg-gray-900">
+        <Button className="flex fixed top-4 left-4" variant="outline" onClick={() => router.push("/")}> 
+          <ArrowLeft className="mr-2 h-4 w-4" />
+              Back 
+        </Button>
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">Sign in to your account</CardTitle>

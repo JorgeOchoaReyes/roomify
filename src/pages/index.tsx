@@ -1,5 +1,5 @@
 import Head from "next/head"; 
-import { FiArrowUpRight } from "react-icons/fi";
+import { FiArrowUpRight, FiHome } from "react-icons/fi";
 import {
   FiBell,
   FiCheck,
@@ -34,6 +34,9 @@ import {
 import { type IconType } from "react-icons";
 import type { JSX } from "react";
 import { useRouter } from "next/router";
+import { FaPeopleGroup } from "react-icons/fa6";
+import { HouseIcon } from "lucide-react";
+import Image from "next/image";
 
 export default function Home() {
   const router = useRouter();
@@ -67,7 +70,7 @@ const Copy: React.FC<{
 }) => {
   return (
     <>
-      <div className="rounded-full bg-zinc-600 mt-10">
+      <div className="rounded-full bg-zinc-600 mt-10 mb-4">
         <a
           href="#"
           target="_blank"
@@ -84,16 +87,16 @@ const Copy: React.FC<{
         </a>
       </div>
       <h1 className="max-w-4xl text-center text-4xl font-black leading-[1.15] md:text-6xl md:leading-[1.15]">
-        Let{"'"}s brew up some magic together
-        <span className="text-indigo-600">.</span>
+        Lets find your next 
+        <span className="text-indigo-700"> roommate.</span>
       </h1>
       <p className="mx-auto my-4 max-w-3xl text-center text-base leading-relaxed md:my-6 md:text-xl md:leading-relaxed">
-        We have true sight into your games and can provide you with feedback,
-        tips, and tricks to help you improve your skills. We{"'"}re here to
-        help you become the next Dota prop player!
+        Tired of searching for the perfect roommate?  
+        Join roomify and we can onboard you in less than <b> 5 minutes! </b>  
+       Focus on what matters most -  <b> finding the right roommate.</b>
       </p>
-      <button onClick={async () => await getStartedHandler()} className="rounded-lg bg-indigo-600 p-3 uppercase text-white transition-colors hover:bg-indigo-700 cursor-pointer">
-        <span className="font-bold"> Use True Sight now! </span>
+      <button onClick={async () => await getStartedHandler()} className="rounded-lg bg-[#FF6154] p-3 uppercase text-white transition-colors hover:bg-[#ff7267] cursor-pointer">
+        <span className="font-bold"> Get Started now! </span>
       </button>
     </>
   );
@@ -101,7 +104,7 @@ const Copy: React.FC<{
 
 const MockupScreen = () => {
   return (
-    <div className="absolute bottom-0 left-1/2 h-36 w-[calc(100vw_-_56px)] max-w-[1100px] -translate-x-1/2 overflow-hidden rounded-t-xl bg-zinc-900 p-0.5">
+    <div className="absolute bottom-0 left-1/2 h-36 w-[calc(100vw_-_56px)] max-w-[1100px] -translate-x-1/2 overflow-hidden rounded-t-xl bg-zinc-800 p-0.5">
       <div className="flex items-center justify-between px-2 py-1">
         <div className="flex items-center gap-0.5">
           <span className="size-2 rounded-full bg-red-400" />
@@ -109,7 +112,7 @@ const MockupScreen = () => {
           <span className="size-2 rounded-full bg-green-400" />
         </div>
         <span className="rounded bg-zinc-600 px-2 py-0.5 text-xs text-zinc-100">
-          your-website.com
+          roomify.io
         </span>
         <FiChevronDown className="text-white" />
       </div>
@@ -118,16 +121,16 @@ const MockupScreen = () => {
           <Logo />
           <div className="mt-3 space-y-1.5">
             <span className="flex items-center gap-1.5 text-xs text-indigo-600">
+              <FaPeopleGroup />
+              <span>Matches</span>
+            </span>
+            <span className="flex items-center gap-1.5 text-xs"> 
               <FiMessageCircle />
-              <span>Messages</span>
+              <span>Chats</span>
             </span>
             <span className="flex items-center gap-1.5 text-xs">
-              <FiCheck />
-              <span>Tasks</span>
-            </span>
-            <span className="flex items-center gap-1.5 text-xs">
-              <FiList />
-              <span>Board</span>
+              <FiHome />
+              <span>Properties</span>
             </span>
           </div>
         </div>
@@ -153,23 +156,7 @@ const MockupScreen = () => {
 
 const Logo = () => { 
   return (
-    <svg
-      width="32"
-      height="auto"
-      viewBox="0 0 50 39"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-fit fill-zinc-950"
-    >
-      <path
-        d="M16.4992 2H37.5808L22.0816 24.9729H1L16.4992 2Z"
-        stopColor="#09090B"
-      ></path>
-      <path
-        d="M17.4224 27.102L11.4192 36H33.5008L49 13.0271H32.7024L23.2064 27.102H17.4224Z"
-        stopColor="#09090B"
-      ></path>
-    </svg>
+    <Image src="/brew.png" alt="logo" width={25} height={25} className="" />
   );
 };
 
