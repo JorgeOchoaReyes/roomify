@@ -5,7 +5,9 @@ import { ChatMessage } from "./chat-message";
 import { Loader2 } from "lucide-react"; 
 import { api } from "~/utils/api";
 import { type Chat, type Message } from "~/types"; 
-import { useRouter } from "next/router"; 
+import { useRouter } from "next/router";  
+import { useStorage } from "~/hooks/use-storage";
+import { toast } from "sonner";
   
 export function ChatBlock() {  
   const [inputValue, setInputValue] = useState("");
@@ -19,17 +21,31 @@ export function ChatBlock() {
     messages: [],
   }); 
 
-  const router = useRouter();
+  const router = useRouter(); 
+  const { setHasUserCompletedSurvey } = useStorage();
   const chat = api.survey.survey.useMutation(); 
   const getChatMessages = api.survey.getRecentMessages.useMutation(); 
 
   useEffect(() => { 
     ((async () => { 
       const chatData = await getChatMessages.mutateAsync();
-      setCurrentChat(chatData); 
+      if (!chatData.messages || chatData.messages.length === 0) {
+        setCurrentChat({
+          id: "1",
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          messages: [{
+            id: "1",
+            content: "Welcome! Let's learn more about you. Start a conversation! Please let me know what your budget is for your next home/apartment?",
+            role: "assistant",
+          }],
+        });
+        return;
+      }  else {
+        setCurrentChat(chatData);
+      }
     }) as () => void)();  
   }, []);
- 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentChat.messages]);
@@ -64,9 +80,10 @@ export function ChatBlock() {
       const response = await chat.mutateAsync({
         message: userMessage.content, 
       }); 
+      const content = response.data?.messages?.[response?.data?.messages?.length - 1]?.content ?? "";
       const assistantMessage = {
         id: assistantMessageId,
-        content: response.messages[response.messages.length - 1]?.content ?? "",
+        content: content,
         role: "assistant",
         isNew: true,
       }; 
@@ -83,6 +100,14 @@ export function ChatBlock() {
       });
       setIsLoading(false);
       setIsStreaming(false);
+
+      if (response.data?.surveyStatus) {
+        setHasUserCompletedSurvey(true);
+        toast.success("Survey completed successfully! \n Redirecting to dashboard...");
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 3000);
+      }
     } catch (error) {
       console.error("Error streaming response:", error); 
       setCurrentChat((prevChat) => {

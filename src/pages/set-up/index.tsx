@@ -47,11 +47,10 @@ export default function SetupPage() {
     }
   }, [has_user_been_onboarded, has_user_completed_survey, router]);
 
-
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid, },
+    formState: { errors, },
   } = useForm<SetupFormValues>({
     resolver: zodResolver(setupSchema),
     mode: "onChange",
@@ -75,7 +74,6 @@ export default function SetupPage() {
     if (result.success) {
       toast.success("Profile updated successfully");
       setIsComplete(true);
-      
     } else {
       setIsComplete(false);
       toast.error(result.messages.join(", "));

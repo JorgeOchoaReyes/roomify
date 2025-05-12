@@ -3,12 +3,22 @@ import React from "react";
 import { ChatBlock } from "~/components/chat/no-sidebar-chat";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { useRouter } from "next/router";
+import { useRouter } from "next/router"; 
+import { useEffect } from "react";
 import { useSetup } from "~/hooks/use-setup";
 
 export default function Chat() {
-  const router = useRouter();
+  const router = useRouter(); 
+
   const { has_user_been_onboarded, has_user_completed_survey } = useSetup();
+  useEffect(() => {
+    if (has_user_been_onboarded && has_user_completed_survey) {
+      (async () => await router.push("/dashboard"))();
+    } else if (!has_user_been_onboarded && !has_user_completed_survey) {
+      (async () => await router.push("/set-up"))();
+    }
+  }, [has_user_been_onboarded, has_user_completed_survey, router]);
+
   return (
     <>
       <Head>
