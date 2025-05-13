@@ -24,6 +24,7 @@ const geist = Geist({
 const MyApp: AppType = ({ Component, pageProps }) => {
   const router = useRouter();
   const isDashboardRoute = router.pathname.startsWith("/dashboard");
+  
 
   useEffect(() => {
     const listener = onIdTokenChanged(

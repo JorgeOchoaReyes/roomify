@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronRight, ChevronLeft, CheckCircle, MapPin, Phone, House, HomeIcon } from "lucide-react";
+import { ChevronRight, ChevronLeft, CheckCircle, MapPin, Phone, House, HomeIcon, Loader2 } from "lucide-react";
 import Head from "next/head";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -326,7 +326,7 @@ export default function SetupPage() {
                           Back
                         </Button> 
                         <Button type="submit" variant="outline" className="flex-1 bg-primary text-white">
-                          Submit
+                          {setupProfile.isPaused ? <Loader2 className="animate-spin" /> : "Submit"}
                         </Button> 
                       </div>
                     </motion.div>
@@ -373,7 +373,7 @@ export default function SetupPage() {
                 {"Please complete the quick survey to help us understand what you're looking for."}
               </p>
               <Button className="w-full" onClick={async () => {
-                await router.push("/chat");
+                await router.push("/set-up/chat");
               }}>Complete Quick Survey</Button>
             </motion.div>
           )}

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FiChevronDown,
   FiChevronsRight,
@@ -16,6 +16,7 @@ import type { User } from "firebase/auth";
 import { useRouter, type NextRouter } from "next/router";
 import Head from "next/head";
 import { Loader2 } from "lucide-react";
+import { useStorage } from "~/hooks/use-storage";
 
 export const Layout: React.FC<{children: React.ReactNode}> = ({children}) => {
   const [user, loading ] = useAuthState(auth);
@@ -23,6 +24,19 @@ export const Layout: React.FC<{children: React.ReactNode}> = ({children}) => {
   const pathname = router.pathname; 
   const _title = pathname.split("/")?.slice(-1)?.[0]?.replace(/-/g, " ") ?? "Dashboard";
   const titleWithCapitalization = _title.charAt(0).toUpperCase() + _title.slice(1);  
+  const {has_user_been_onboarded, has_user_completed_survey} = useStorage(); 
+
+  useEffect(() => {
+    if(!has_user_been_onboarded && !has_user_completed_survey) {
+      router.push("/set-up").then().catch((error) => {
+        console.error("Error redirecting to onboarding:", error);
+      });
+    } else if(has_user_completed_survey && !has_user_been_onboarded) {
+      router.push("/onboarding").then().catch((error) => {
+        console.error("Error redirecting to onboarding:", error);
+      });
+    }
+  }, []);
   
   return (
     <>
